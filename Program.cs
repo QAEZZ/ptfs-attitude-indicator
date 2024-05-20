@@ -10,7 +10,7 @@ namespace PtfsAi
         static void Main(string[] args)
         {
             // Window title declared here for visibility
-            string windowTitle = "Photino for .NET Demo App";
+            string windowTitle = "PTFS Attitude Indicator by qaezz.dev";
 
             // Creating a new PhotinoWindow instance with the fluent API
             var window = new PhotinoWindow()
