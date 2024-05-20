@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Attitude Indicator for PTFS</title>
+    <link rel="stylesheet" href="assets/main.css" />
+</head>
+
+<body>
+    <main>
+        <div style="position:absolute; top:0;left:0;color:white;z-index:5">
+            <span id="x"></span>
+            <span id="y"></span>
+            <span id="p"></span>
+        </div>
+        <div id="overlay">
+            <div id="sky">
+                <!-- <div class="angles">
+                    <p>5</p>
+                    <p>10</p>
+                    <p>15</p>
+                    <p>20</p>
+                    <p>25</p>
+                    <p>30</p>
+                    <p>40</p>
+                    <p>50</p>
+                    <p>70</p>
+                    <p>80</p>
+                    <p>90</p>
+                </div> -->
+            </div>
+            <div id="horizontal-line">
+                <div id="left-bar">
+                </div>
+                <div id="middle-dot"></div>
+                <div id="right-bar">
+                </div>
+            </div>
+            <div id="ground">
+                <!-- <div class="angles">
+                    <p>-5</p>
+                    <p>-10</p>
+                    <p>-15</p>
+                    <p>-20</p>
+                    <p>-25</p>
+                    <p>-30</p>
+                    <p>-40</p>
+                    <p>-50</p>
+                    <p>-70</p>
+                    <p>-80</p>
+                    <p>-90</p>
+                </div> -->
+            </div>
+        </div>
+    </main>
+
+    <!-- <script src="mouse.js"></script> -->
+    <script src="app://dynamic.js"></script>
+
+    <script>
+        // function callDotNet() {
+        //     window.external.sendMessage('Hi .NET! 🤖');
+        // }
+
+        // window.external.receiveMessage(message => alert(message));
+
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        const labelX = document.getElementById('x');
+        const labelY = document.getElementById('y');
+        const labelP = document.getElementById('p');
+
+        const sky = document.getElementById('sky');
+        const ground = document.getElementById('ground');
+
+        window.external.receiveMessage(message => {
+            console.log(message);
+            message = JSON.parse(message);
+            if (message.msg === "mousePos") {
+                labelX.textContent = message.data.x
+                labelY.textContent = message.data.y
+
+                const p = message.data.y / window.innerHeight * 100 + 45;
+                labelP.textContent = p;
+
+                sky.style.height = `${p}%`;
+                // if (p > 50) {
+                //     sky.style.height = `${100 - p}%`;
+                //     ground.style.height = `${p}%`;
+                // } else {
+                //     sky.style.height = `${p}%`;
+                //     ground.style.height = `${100 - p}%`;
+                // }
+
+            } else {
+                alert("unknown message recieved.");
+            }
+        });
+
+        (async () => {
+            while (true) {
+                window.external.sendMessage('getMousePos');
+                await sleep(150);
+            }
+        })();
+
+
+
+    </script>
+</body>
+
+</html>
