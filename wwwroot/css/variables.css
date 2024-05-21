@@ -1,0 +1,9 @@
+:root {
+    --c-overlay-color: black;
+    --c-sky-color: deepskyblue;
+    --c-ground-color: chocolate;
+    --c-horizon-color: white;
+    --c-angle-ticks-color: white;
+    --c-artificial-aircraft-background: yellow;
+    --c-artificial-aircraft-border: black;
+}

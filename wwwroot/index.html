@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8" />
     <title>Attitude Indicator for PTFS</title>
-    <link rel="stylesheet" href="assets/main.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/variables.css" />
 </head>
 
 <body>
-    <main>
-        <div style="position:absolute; top:0;left:0;color:red;z-index:9999">
+    <main id="content">
+        <!-- <div style="position:absolute; top:0;left:0;color:red;z-index:9999">
             <span id="x"></span>
             <span id="y"></span>
             <span id="py"></span>
             <span id="px"></span>
-        </div>
+        </div> -->
+
         <div id="overlay">
             <div id="container">
                 <div id="sky">
@@ -27,14 +30,6 @@
                         <p>—</p>
                         <p>—</p>
                         <p>—</p>
-                        <!-- <p>——</p>
-                        <p>—</p>
-                        <p>——</p>
-                        <p>—</p>
-                        <p>——</p>
-                        <p>—</p>
-                        <p>——</p>
-                        <p>—</p> -->
                     </div>
                 </div>
                 <div id="ground">
@@ -47,14 +42,6 @@
                         <p>—</p>
                         <p>—</p>
                         <p>—</p>
-                        <!-- <p>—</p>
-                        <p>——</p>
-                        <p>—</p>
-                        <p>——</p>
-                        <p>—</p>
-                        <p>——</p>
-                        <p>—</p>
-                        <p>——</p> -->
                     </div>
                 </div>
             </div>
@@ -67,12 +54,18 @@
             </div>
 
         </div>
+        <p id="settings">⚙</p>
     </main>
 
-    <!-- <script src="mouse.js"></script> -->
     <script src="app://dynamic.js"></script>
+    <script src="js/loader.js"></script>
 
     <script>
+        function addStyle(styleString) {
+            const style = document.createElement("style");
+            style.textContent = styleString;
+            document.body.append(style);
+        }
         // function callDotNet() {
         //     window.external.sendMessage('Hi .NET! 🤖');
         // }
@@ -81,39 +74,65 @@
 
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        const labelX = document.getElementById('x');
-        const labelY = document.getElementById('y');
-        const labelPY = document.getElementById('py');
-        const labelPX = document.getElementById('px');
+        // const labelX = document.getElementById('x');
+        // const labelY = document.getElementById('y');
+        // const labelPY = document.getElementById('py');
+        // const labelPX = document.getElementById('px');
 
         const sky = document.getElementById('sky');
         const ground = document.getElementById('ground');
         const horizon = document.getElementById('horizon');
         const container = document.getElementById('container');
 
+        const params = new URLSearchParams(document.location.search);
+        const encodedSettings = params.get("settings");
+        if (encodedSettings) {
+            const settings = JSON.parse(atob(encodedSettings));
+            Object.keys(settings.colors).forEach(color => {
+                if (settings.colors[color] != null && !settings.colors[color].includes('var')) {
+                    console.log(color, settings.colors[color]);
+                    console.log(`:root { --c-${color}-color: ${settings.colors[color]}; }`);
+                    // addStyle(`:root { --c-${color}-color: ${settings.colors[color]}; }`);
+                    document.documentElement.style.setProperty(`--c-${color}-color`, settings.colors[color]);
+                }
+            });
+
+            // addStyle(`
+            // :root {
+            //     --c-sky-color: ${settings.colors.sky};
+            //     --c-ground-color: ${settings.colors.ground};
+            //     --c-horizon-color: ${settings.colors.horizon};
+            // }
+            // `);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('settings').addEventListener("click", () => {
+                window.location.replace("settings.html");
+            });
+        });
+
         window.external.receiveMessage(message => {
-            console.log(message);
+            // console.log(message);
             message = JSON.parse(message);
-            if (message.msg === "mousePos") {
-                labelX.textContent = message.data.x
-                labelY.textContent = message.data.y
+            if (message.msg === "MousePos") {
+                // labelX.textContent = message.data.x
+                // labelY.textContent = message.data.y
 
                 const sensitivityY = 25;
-                const sensitivityX = 15;
+                const sensitivityX = 10;
 
                 const pY = (message.data.y / window.innerHeight) * sensitivityY;
-                labelPY.textContent = Math.round(pY);
+                // labelPY.textContent = Math.round(pY);
 
                 const pX = (message.data.x / window.innerWidth) * sensitivityX;
-                labelPX.textContent = Math.round(pX);
+                // labelPX.textContent = Math.round(pX);
 
                 sky.style.height = `calc(${pY}% + 50vh - 4px)`;
                 ground.style.height = `calc(-${pY}% + 100vh)`;
 
-                // ground.style.transformOrigin = 'top top';
-                // ground.style.transform = `rotateZ(${pX}deg)`;
                 container.style.transform = `rotateZ(${pX}deg)`;
-                horizon.style.transform = `rotateZ(${pX}deg)`
+                horizon.style.transform = `rotateZ(${pX}deg)`;
 
             } else {
                 alert("unknown message recieved.");
@@ -122,7 +141,7 @@
 
         (async () => {
             while (true) {
-                window.external.sendMessage('getMousePos');
+                window.external.sendMessage('GetMousePos');
                 await sleep(50);
             }
         })();

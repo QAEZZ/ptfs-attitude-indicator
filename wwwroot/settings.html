@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Settings</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/variables.css">
+</head>
+
+<body>
+    <p id="back">Back</p>
+
+    <div id="container">
+        <section id="colors">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <colgroup class="width-50"></colgroup>
+                        <colgroup class="width-50"></colgroup>
+                        <th>Sky Color</th>
+                        <td>
+                            <input id="sky-color-field" type="text" style="background-color: var(--c-sky-color);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <colgroup class="width-50"></colgroup>
+                        <colgroup class="width-50"></colgroup>
+                        <th>Ground Color</th>
+                        <td>
+                            <input id="ground-color-field" type="text"
+                                style="background-color: var(--c-ground-color);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <colgroup class="width-50"></colgroup>
+                        <colgroup class="width-50"></colgroup>
+                        <th>Horizon Color</th>
+                        <td>
+                            <input id="horizon-color-field" type="text"
+                                style="background-color: var(--c-horizon-color);" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = {
+                sky: document.getElementById('sky-color-field'),
+                ground: document.getElementById('ground-color-field'),
+                horizon: document.getElementById('horizon-color-field')
+            };
+
+            const defaultColors = {
+                sky: inputs.sky.style.backgroundColor,
+                ground: inputs.ground.style.backgroundColor,
+                horizon: inputs.horizon.style.backgroundColor
+            };
+
+            let colorBank = { ...defaultColors };
+
+            Object.keys(inputs).forEach(key => {
+                inputs[key].addEventListener("input", () => {
+                    colorBank[key] = inputs[key].value.trim() || defaultColors[key];
+                    if (colorBank[key] != null) {
+                        inputs[key].style.backgroundColor = colorBank[key];
+                    }
+                });
+            });
+
+            document.getElementById('back').addEventListener("click", () => {
+                const data = {
+                    colors: {
+                        sky: colorBank.sky,
+                        ground: colorBank.ground,
+                        horizon: colorBank.horizon
+                    }
+                };
+                const encodedData = btoa(JSON.stringify(data));
+                window.location.replace(`index.html?settings=${encodedData}`);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

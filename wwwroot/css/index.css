@@ -1,0 +1,138 @@
+#settings {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 1.5rem;
+    z-index: 99;
+    color: grey;
+    margin: 0;
+    padding: 2px;
+    cursor: pointer;
+}
+
+#settings:hover {
+    color: #aaa;
+}
+
+#overlay {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+#overlay::before {
+    content: "";
+    z-index: 8;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80vmin;
+    height: 80vmin;
+    background-color: transparent;
+    /* border-radius: 50%; */
+    border-radius: 25px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 100vmax var(--c-overlay-color);
+}
+
+#container {
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+}
+
+#sky {
+    background-color: var(--c-sky-color);
+    width: 100vw;
+    height: 50vh;
+    border-bottom: 1px solid var(--c-horizon-color);
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+.angles {
+    position: relative;
+    z-index: 11;
+    color: var(--c-angle-ticks-color);
+    text-align: center;
+}
+
+.angles p {
+    margin: 0;
+}
+
+#sky .angles p:nth-child(odd)::after {
+    content: '—';
+}
+
+#ground .angles p:nth-child(even)::after {
+    content: '—';
+}
+
+#ground {
+    background-color: var(--c-ground-color);
+    width: 100vw;
+    height: 50vh;
+    border-top: 1px solid var(--c-horizon-color);
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+#horizontal-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+    display: inline-flex;
+    gap: 20px;
+}
+
+#horizontal-line #left-bar,
+#horizontal-line #right-bar {
+    height: 4px;
+    width: 15vw;
+    background-color: var(--c-artificial-aircraft-background);
+    border: 1px solid black;
+    transform: translate(0, 1px);
+}
+
+#horizontal-line #left-bar::after {
+    content: " ";
+    position: absolute;
+    right: 0;
+    background-color: var(--c-artificial-aircraft-background);
+    width: 4px;
+    height: 5px;
+    border: 1px solid var(--c-artificial-aircraft-border);
+    border-top: none;
+    transform: translate(1px, 4px);
+}
+
+#horizontal-line #right-bar::before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    background-color: var(--c-artificial-aircraft-background);
+    width: 4px;
+    height: 5px;
+    border: 1px solid var(--c-artificial-aircraft-border);
+    border-top: none;
+    transform: translate(-1px, 4px);
+}
+
+#horizontal-line #middle-dot {
+    background-color: var(--c-artificial-aircraft-background);
+    border: 1px solid var(--c-artificial-aircraft-border);
+    aspect-ratio: 1/1;
+    height: 4px;
+    width: 4px;
+    z-index: 2;
+    transform: translate(0, 1px);
+}
